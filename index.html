@@ -1,0 +1,1025 @@
+<!DOCTYPE html>
+<html lang="es" class="h-full">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+    <title>Evaluación de Inglés: Present Progressive (Nivel 1)</title>
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    colors: {
+                        brand: {
+                            50: '#f0f9ff',
+                            100: '#e0f2fe',
+                            500: '#0284c7',
+                            600: '#0284c7',
+                            700: '#0369a1',
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+    <!-- Font Awesome Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap');
+        
+        html {
+            -webkit-text-size-adjust: 100%;
+        }
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+            -webkit-user-select: none;
+            -moz-user-select: none;
+            -ms-user-select: none;
+            user-select: none;
+            -webkit-touch-callout: none;
+            padding-bottom: env(safe-area-inset-bottom);
+        }
+
+        /* Prevent iOS auto-zoom when tapping inputs by enforcing font-size >= 16px */
+        input[type="text"], select, textarea {
+            font-size: 16px !important;
+            -webkit-user-select: text;
+            -moz-user-select: text;
+            -ms-user-select: text;
+            user-select: text;
+            touch-action: manipulation;
+        }
+
+        button, select, label {
+            touch-action: manipulation;
+            min-height: 44px;
+        }
+
+        @media print {
+            body {
+                background: #ffffff !important;
+                color: #000000 !important;
+                -webkit-print-color-adjust: exact;
+                print-color-adjust: exact;
+            }
+            .no-print {
+                display: none !important;
+            }
+            .print-only {
+                display: block !important;
+            }
+            .print-card {
+                box-shadow: none !important;
+                border: 1px solid #cbd5e1 !important;
+                break-inside: avoid;
+            }
+        }
+    </style>
+</head>
+<body class="bg-slate-50 dark:bg-slate-900 text-slate-800 dark:text-slate-100 min-h-full flex flex-col transition-colors duration-300">
+
+    <!-- MODAL DE DESBLOQUEO DOCENTE / PIN -->
+    <div id="pinModal" class="hidden fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-950/90 backdrop-blur-lg">
+        <div class="bg-white dark:bg-slate-800 rounded-3xl p-6 sm:p-8 max-w-md w-full shadow-2xl border border-slate-200 dark:border-slate-700 text-center">
+            <div class="inline-flex items-center justify-center w-16 h-16 rounded-2xl bg-rose-600 text-white shadow-lg shadow-rose-500/30 mb-4 text-2xl">
+                <i class="fa-solid fa-lock"></i>
+            </div>
+            <h2 class="text-2xl font-extrabold text-slate-900 dark:text-white">Acceso Bloqueado</h2>
+            <p class="text-xs text-slate-500 dark:text-slate-400 mt-1 mb-6">
+                Esta evaluación ya ha sido completada en este dispositivo. Ingresa el PIN docente para reiniciar y permitir un nuevo registro.
+            </p>
+
+            <form onsubmit="event.preventDefault(); verifyDocentPIN();" class="space-y-4">
+                <div>
+                    <input type="password" id="pinInput" maxlength="6" placeholder="Ingresar PIN" class="w-full text-center text-2xl tracking-widest font-bold px-4 py-3 rounded-xl border border-slate-300 dark:border-slate-600 bg-slate-50 dark:bg-slate-700/50 text-slate-900 dark:text-white focus:ring-2 focus:ring-blue-500 focus:outline-none transition">
+                    <p id="pinErrorText" class="hidden text-xs text-rose-500 font-bold mt-2">PIN incorrecto. Intenta de nuevo.</p>
+                </div>
+
+                <button type="submit" class="w-full py-3.5 px-6 rounded-xl bg-slate-900 hover:bg-slate-800 dark:bg-blue-600 dark:hover:bg-blue-700 text-white font-bold text-base shadow-lg transition flex items-center justify-center gap-2">
+                    <i class="fa-solid fa-key"></i> Desbloquear y Permitir Nuevo Examen
+                </button>
+            </form>
+        </div>
+    </div>
+
+    <!-- MODAL DE REGISTRO / BIENVENIDA -->
+    <div id="startModal" class="fixed inset-0 z-40 flex items-center justify-center p-4 bg-slate-900/80 backdrop-blur-md">
+        <div class="bg-white dark:bg-slate-800 rounded-3xl p-6 sm:p-8 max-w-lg w-full shadow-2xl border border-slate-200 dark:border-slate-700 relative overflow-hidden">
+            <div class="absolute -top-10 -right-10 w-32 h-32 bg-blue-500/10 rounded-full blur-2xl"></div>
+            
+            <div class="text-center mb-6">
+                <div class="inline-flex items-center justify-center w-16 h-16 rounded-2xl bg-blue-600 text-white shadow-lg shadow-blue-500/30 mb-3 text-2xl">
+                    <i class="fa-solid fa-graduation-cap"></i>
+                </div>
+                <h2 class="text-2xl font-extrabold text-slate-900 dark:text-white">Evaluación de Inglés</h2>
+                <p class="text-xs uppercase tracking-wider font-semibold text-blue-600 dark:text-blue-400 mt-1">Present Progressive • Nivel 1</p>
+            </div>
+
+            <form id="startForm" onsubmit="event.preventDefault(); startExam();" class="space-y-4">
+                <div>
+                    <label class="block text-xs font-bold text-slate-700 dark:text-slate-300 uppercase mb-1" for="studentName">
+                        Nombre y Apellido del Estudiante <span class="text-rose-500">*</span>
+                    </label>
+                    <input type="text" id="studentName" required placeholder="Ej. Ana María Gómez" class="w-full px-4 py-3 rounded-xl border border-slate-300 dark:border-slate-600 bg-slate-50 dark:bg-slate-700/50 text-slate-900 dark:text-white focus:ring-2 focus:ring-blue-500 focus:outline-none transition">
+                </div>
+
+                <div class="grid grid-cols-2 gap-3">
+                    <div>
+                        <label class="block text-xs font-bold text-slate-700 dark:text-slate-300 uppercase mb-1" for="studentCourse">
+                            Curso / Paralelo <span class="text-rose-500">*</span>
+                        </label>
+                        <input type="text" id="studentCourse" required placeholder="Ej. 10mo 'B'" class="w-full px-4 py-3 rounded-xl border border-slate-300 dark:border-slate-600 bg-slate-50 dark:bg-slate-700/50 text-slate-900 dark:text-white focus:ring-2 focus:ring-blue-500 focus:outline-none transition">
+                    </div>
+                    <div>
+                        <label class="block text-xs font-bold text-slate-700 dark:text-slate-300 uppercase mb-1">
+                            Escala de Nota
+                        </label>
+                        <div class="w-full px-4 py-3 rounded-xl border border-slate-200 dark:border-slate-700 bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-200 font-extrabold text-center">
+                            / 10.00 pts
+                        </div>
+                    </div>
+                </div>
+
+                <div class="bg-amber-50 dark:bg-amber-950/30 border border-amber-200 dark:border-amber-800/50 rounded-2xl p-4 text-xs text-amber-800 dark:text-amber-300 space-y-1.5">
+                    <p class="font-bold flex items-center gap-1.5 text-amber-900 dark:text-amber-200">
+                        <i class="fa-solid fa-bolt text-amber-600 dark:text-amber-400"></i> Bloqueo Automático e Instrucciones:
+                    </p>
+                    <ul class="list-disc pl-4 space-y-1 text-slate-600 dark:text-slate-300">
+                        <li><strong>Bloqueo Inmediato:</strong> Cada pregunta se bloqueará automáticamente al seleccionar una opción o salir del campo de texto.</li>
+                        <li>Tiempo máximo: <strong>45 minutos</strong>.</li>
+                        <li>Botón <span class="bg-slate-200 dark:bg-slate-700 px-1.5 py-0.5 rounded font-mono font-bold text-slate-800 dark:text-slate-200">'</span>: Usa el botón de apóstrofe para ingresarlo fácilmente en teléfonos o computadoras sin perder el foco.</li>
+                        <li>Protección anticopia activa.</li>
+                    </ul>
+                </div>
+
+                <button type="submit" class="w-full py-3.5 px-6 rounded-xl bg-blue-600 hover:bg-blue-700 text-white font-bold text-base shadow-lg shadow-blue-500/25 transition duration-200 flex items-center justify-center gap-2">
+                    <i class="fa-solid fa-play"></i> Comenzar Evaluación
+                </button>
+            </form>
+        </div>
+    </div>
+
+    <!-- BANNER ALERTA ANTICOPIA -->
+    <div id="cheatWarningBanner" class="hidden fixed top-4 right-4 left-4 sm:left-auto sm:max-w-md z-50 bg-rose-600 text-white p-4 rounded-2xl shadow-2xl border border-rose-400 flex items-center gap-3 animate-bounce">
+        <i class="fa-solid fa-triangle-exclamation text-2xl"></i>
+        <div class="text-xs">
+            <p class="font-bold text-sm">¡Advertencia Anti-Fraude!</p>
+            <p id="cheatWarningText">Acción no permitida registrada en la bitácora del examen.</p>
+        </div>
+        <button onclick="dismissWarning()" class="ml-auto text-white/80 hover:text-white p-2">
+            <i class="fa-solid fa-xmark text-lg"></i>
+        </button>
+    </div>
+
+    <!-- Header / Navbar -->
+    <header class="sticky top-0 z-30 bg-white/90 dark:bg-slate-800/90 backdrop-blur-md border-b border-slate-200 dark:border-slate-700 shadow-sm no-print">
+        <div class="max-w-4xl mx-auto px-4 py-3 flex items-center justify-between">
+            <div class="flex items-center space-x-3">
+                <div class="bg-blue-600 text-white p-2.5 rounded-xl shadow-md flex items-center justify-center w-10 h-10">
+                    <i class="fa-solid fa-graduation-cap text-lg"></i>
+                </div>
+                <div>
+                    <h1 class="font-bold text-base sm:text-lg leading-tight text-slate-900 dark:text-white">Present Progressive</h1>
+                    <p id="studentInfoBadge" class="text-xs text-slate-500 dark:text-slate-400">Estudiante: Sin registrar</p>
+                </div>
+            </div>
+            
+            <div class="flex items-center space-x-3">
+                <!-- Temporizador -->
+                <div id="timerContainer" class="flex items-center space-x-2 bg-slate-100 dark:bg-slate-700 px-3 py-2 rounded-xl border border-slate-200 dark:border-slate-600 text-slate-800 dark:text-slate-100 font-mono font-bold text-sm sm:text-base">
+                    <i class="fa-solid fa-clock text-blue-500" id="timerIcon"></i>
+                    <span id="timerDisplay">45:00</span>
+                </div>
+
+                <button id="themeToggleBtn" onclick="toggleTheme()" aria-label="Cambiar tema" class="p-2.5 rounded-xl text-slate-500 hover:text-slate-700 dark:text-slate-400 dark:hover:text-slate-200 hover:bg-slate-100 dark:hover:bg-slate-700 focus:outline-none transition min-h-[44px] min-w-[44px] flex items-center justify-center">
+                    <i id="themeIcon" class="fa-solid fa-moon text-lg"></i>
+                </button>
+            </div>
+        </div>
+        
+        <!-- Barra de Progreso -->
+        <div class="w-full bg-slate-200 dark:bg-slate-700 h-1.5">
+            <div id="progressBar" class="bg-blue-600 h-1.5 transition-all duration-300" style="width: 0%"></div>
+        </div>
+    </header>
+
+    <!-- Main Container -->
+    <main class="flex-grow max-w-4xl w-full mx-auto px-4 py-6 sm:py-8">
+        
+        <!-- Header de Examen para Impresión (A4) -->
+        <div class="hidden print-only mb-6 border-b-2 border-slate-800 pb-4">
+            <div class="flex justify-between items-center">
+                <div>
+                    <h1 class="text-2xl font-extrabold text-slate-900">CERTIFICADO DE EVALUACIÓN DE INGLÉS</h1>
+                    <p class="text-sm text-slate-600">Tema: Present Progressive (Level 1 - Ego4u Standard)</p>
+                </div>
+                <div class="text-right">
+                    <p class="text-xs text-slate-500">Fecha/Hora: <span id="printDate"></span></p>
+                </div>
+            </div>
+            <div class="mt-4 grid grid-cols-2 gap-4 text-sm bg-slate-50 p-4 rounded-xl border border-slate-200">
+                <p><strong>Estudiante:</strong> <span id="printStudentName"></span></p>
+                <p><strong>Curso/Paralelo:</strong> <span id="printStudentCourse"></span></p>
+                <p><strong>Calificación Final:</strong> <span id="printFinalGrade" class="font-extrabold text-blue-700 text-lg"></span> / 10.00</p>
+                <p><strong>Desempeño:</strong> <span id="printQualitativeGrade" class="font-bold"></span></p>
+                <p><strong>Tiempo Empleado:</strong> <span id="printTimeSpent"></span></p>
+                <p><strong>Infracciones Anticopia:</strong> <span id="printCheatingCount"></span></p>
+            </div>
+        </div>
+
+        <!-- Panel del Formulario de Examen -->
+        <form id="quizForm" onsubmit="event.preventDefault(); finishExam();">
+            <div id="sectionsContainer" class="space-y-8">
+                <!-- Preguntas dinámicas -->
+            </div>
+
+            <!-- Botones de Acción -->
+            <div class="no-print mt-10 flex flex-col sm:flex-row items-center justify-between gap-4 bg-white dark:bg-slate-800 p-4 rounded-2xl border border-slate-200 dark:border-slate-700 shadow-md">
+                <div class="text-sm text-slate-500 dark:text-slate-400 flex items-center gap-2">
+                    <i class="fa-solid fa-lock text-emerald-500"></i>
+                    <span><strong id="answeredCount">0</strong> de 30 preguntas respondidas y bloqueadas</span>
+                </div>
+                <div class="flex items-center space-x-3 w-full sm:w-auto">
+                    <button type="submit" id="submitBtn" class="w-full sm:w-auto px-8 py-3.5 rounded-xl bg-blue-600 hover:bg-blue-700 text-white font-bold text-base shadow-lg shadow-blue-500/20 transition focus:outline-none flex items-center justify-center gap-2">
+                        <i class="fa-solid fa-paper-plane"></i> Finalizar y Entregar Examen
+                    </button>
+                </div>
+            </div>
+        </form>
+
+        <!-- Panel Final de Resultados -->
+        <div id="resultsDashboard" class="hidden mt-8 bg-white dark:bg-slate-800 rounded-3xl p-6 sm:p-8 shadow-xl border border-slate-200 dark:border-slate-700 text-center print-card">
+            
+            <div class="no-print">
+                <div class="inline-flex items-center justify-center w-20 h-20 rounded-2xl bg-blue-50 dark:bg-blue-900/40 text-blue-600 dark:text-blue-400 mb-4 text-3xl shadow-inner">
+                    <i id="resultIcon" class="fa-solid fa-trophy"></i>
+                </div>
+                <h2 id="resultTitle" class="text-2xl sm:text-3xl font-extrabold text-slate-900 dark:text-white">Resultado de la Evaluación</h2>
+                <p id="resultMessage" class="text-slate-600 dark:text-slate-300 mt-1 max-w-lg mx-auto text-sm sm:text-base">Resumen oficial de tu calificación sobre 10.00 puntos.</p>
+                <div id="web3status" class="mt-3 hidden text-xs font-semibold px-3 py-1.5 rounded-lg inline-flex items-center gap-2"></div>
+            </div>
+
+            <!-- Métricas Principales -->
+            <div class="grid grid-cols-2 sm:grid-cols-4 gap-4 max-w-3xl mx-auto my-6">
+                <div class="p-4 bg-slate-50 dark:bg-slate-700/50 rounded-2xl border border-slate-200 dark:border-slate-700">
+                    <div class="text-xs uppercase text-slate-400 font-bold">Nota Final</div>
+                    <div id="finalGrade10" class="text-2xl sm:text-3xl font-extrabold text-blue-600 dark:text-blue-400 mt-1">0.00 / 10</div>
+                    <div id="qualitativeBadge" class="text-xs font-bold mt-1 px-2 py-0.5 rounded-md inline-block bg-blue-100 text-blue-800 dark:bg-blue-900/60 dark:text-blue-200">-</div>
+                </div>
+                <div class="p-4 bg-slate-50 dark:bg-slate-700/50 rounded-2xl border border-slate-200 dark:border-slate-700">
+                    <div class="text-xs uppercase text-slate-400 font-bold">Aciertos</div>
+                    <div id="finalScoreText" class="text-xl sm:text-2xl font-bold text-slate-800 dark:text-white mt-2">0 / 30</div>
+                </div>
+                <div class="p-4 bg-slate-50 dark:bg-slate-700/50 rounded-2xl border border-slate-200 dark:border-slate-700">
+                    <div class="text-xs uppercase text-slate-400 font-bold">Porcentaje</div>
+                    <div id="finalPercentageText" class="text-xl sm:text-2xl font-bold text-emerald-600 dark:text-emerald-400 mt-2">0%</div>
+                </div>
+                <div class="p-4 bg-slate-50 dark:bg-slate-700/50 rounded-2xl border border-slate-200 dark:border-slate-700">
+                    <div class="text-xs uppercase text-slate-400 font-bold">Infracciones</div>
+                    <div id="cheatReportBadge" class="text-xl sm:text-2xl font-bold text-slate-700 dark:text-slate-200 mt-2">0</div>
+                </div>
+            </div>
+
+            <!-- Botones del Reporte -->
+            <div class="no-print flex flex-wrap justify-center gap-3 mt-6">
+                <button onclick="window.print()" class="px-6 py-3 rounded-xl bg-slate-800 hover:bg-slate-900 dark:bg-slate-700 dark:hover:bg-slate-600 text-white font-semibold shadow-md transition flex items-center gap-2">
+                    <i class="fa-solid fa-print"></i> Imprimir / Guardar en PDF
+                </button>
+                <button onclick="promptDocentUnlock()" class="px-6 py-3 rounded-xl bg-rose-600 hover:bg-rose-700 text-white font-semibold shadow-md transition flex items-center gap-2">
+                    <i class="fa-solid fa-key"></i> Reiniciar Prueba (Docente)
+                </button>
+            </div>
+        </div>
+
+    </main>
+
+    <!-- Footer -->
+    <footer class="no-print mt-auto border-t border-slate-200 dark:border-slate-800 py-4 text-center text-xs text-slate-500 dark:text-slate-400">
+        Evaluación Adaptada de Ego4u (Present Progressive Level 1) • Calificación sobre 10.00
+    </footer>
+
+    <!-- Script Logic -->
+    <script>
+        // --- CLAVE WEB3FORMS Y PIN DE SEGURIDAD DOCENTE ---
+        const WEB3FORMS_ACCESS_KEY = "edb4ed33-13fd-4475-9509-32c98a352c61"; // Reemplazar con tu clave de Web3Forms
+        const DOCENT_PIN = "4560";
+        const STORAGE_KEY = "present_progressive_exam_state_v1";
+
+        // --- PREGUNTAS DEL TEST EGO4U (30 PREGUNTAS) ---
+        const quizData = [
+            {
+                sectionId: 1,
+                title: "1. Positive Sentences - Part 1",
+                description: "Selecciona la opción correcta para completar la oración afirmativa.",
+                questions: [
+                    { id: "q1", type: "radio", prompt: "Look! Andy _____ in the garden.", options: ["am working", "are working", "is working"], answer: "is working" },
+                    { id: "q2", type: "radio", prompt: "I _____ TV at the moment.", options: ["am watching", "are watching", "is watching"], answer: "am watching" },
+                    { id: "q3", type: "radio", prompt: "We _____ a book.", options: ["am reading", "are reading", "is reading"], answer: "are reading" },
+                    { id: "q4", type: "radio", prompt: "She _____ the piano.", options: ["am playing", "are playing", "is playing"], answer: "is playing" },
+                    { id: "q5", type: "radio", prompt: "Listen! Sue and John _____.", options: ["am singing", "are singing", "is singing"], answer: "are singing" }
+                ]
+            },
+            {
+                sectionId: 2,
+                title: "2. Positive Sentences - Part 2",
+                description: "Escribe la forma adecuada de Present Progressive del verbo entre paréntesis.",
+                questions: [
+                    { id: "q6", type: "input", prompt: "My sister", verb: "to clean", rest: "the bathroom.", validAnswers: ["is cleaning"] },
+                    { id: "q7", type: "input", prompt: "Look! They", verb: "to go", rest: "inside.", validAnswers: ["are going"] },
+                    { id: "q8", type: "input", prompt: "I", verb: "to wait", rest: "in the car now.", validAnswers: ["am waiting"] },
+                    { id: "q9", type: "input", prompt: "Mrs Miller", verb: "to listen", rest: "to CDs.", validAnswers: ["is listening"] },
+                    { id: "q10", type: "input", prompt: "We", verb: "to speak", rest: "English at the moment.", validAnswers: ["are speaking"] }
+                ]
+            },
+            {
+                sectionId: 3,
+                title: "3. Exceptions & Spelling Rules",
+                description: "Atención a las reglas ortográficas especiales (omitir '-e', duplicar consonantes).",
+                questions: [
+                    { id: "q11", type: "radio", prompt: "His brother _____ a test at the moment.", options: ["is writeing", "is writing", "are writing"], answer: "is writing" },
+                    { id: "q12", type: "input", prompt: "They", verb: "to swim", rest: "in the pool.", validAnswers: ["are swimming"] },
+                    { id: "q13", type: "input", prompt: "Look! David and Max", verb: "to come", rest: "home.", validAnswers: ["are coming"] },
+                    { id: "q14", type: "radio", prompt: "My dog Charlie _____ to the park.", options: ["is runing", "is running", "are running"], answer: "is running" },
+                    { id: "q15", type: "input", prompt: "I", verb: "to make", rest: "breakfast now.", validAnswers: ["am making"] }
+                ]
+            },
+            {
+                sectionId: 4,
+                title: "4. Long and Short Forms",
+                description: "Reescribe la oración utilizando la forma alternativa (contracción corta o forma larga).",
+                questions: [
+                    { id: "q16", type: "input-full", prompt: "We are reading a letter.", hint: "Reescribir en forma corta", validAnswers: ["We're reading a letter", "We're reading a letter."] },
+                    { id: "q17", type: "input-full", prompt: "He is opening the window.", hint: "Reescribir en forma corta", validAnswers: ["He's opening the window", "He's opening the window."] },
+                    { id: "q18", type: "input-full", prompt: "I am playing computer games.", hint: "Reescribir en forma corta", validAnswers: ["I'm playing computer games", "I'm playing computer games."] },
+                    { id: "q19", type: "input-full", prompt: "She's dancing at the party.", hint: "Reescribir en forma larga", validAnswers: ["She is dancing at the party", "She is dancing at the party."] },
+                    { id: "q20", type: "input-full", prompt: "They're drinking a cup of tea.", hint: "Reescribir en forma larga", validAnswers: ["They are drinking a cup of tea", "They are drinking a cup of tea."] }
+                ]
+            },
+            {
+                sectionId: 5,
+                title: "5. Negative Sentences",
+                description: "Transforma la oración afirmativa en una oración negativa.",
+                questions: [
+                    {
+                        id: "q21", type: "input-full", prompt: "We are playing a game.", hint: "Transformar a negativa",
+                        validAnswers: ["We are not playing a game", "We are not playing a game.", "We're not playing a game", "We're not playing a game.", "We aren't playing a game", "We aren't playing a game."]
+                    },
+                    {
+                        id: "q22", type: "input-full", prompt: "I'm drawing a picture.", hint: "Transformar a negativa",
+                        validAnswers: ["I am not drawing a picture", "I am not drawing a picture.", "I'm not drawing a picture", "I'm not drawing a picture."]
+                    },
+                    {
+                        id: "q23", type: "input-full", prompt: "He is making pizza right now.", hint: "Transformar a negativa",
+                        validAnswers: ["He is not making pizza right now", "He is not making pizza right now.", "He's not making pizza right now", "He's not making pizza right now.", "He isn't making pizza right now", "He isn't making pizza right now."]
+                    },
+                    {
+                        id: "q24", type: "input-full", prompt: "Susan and her brother are taking photos.", hint: "Transformar a negativa",
+                        validAnswers: ["Susan and her brother are not taking photos", "Susan and her brother are not taking photos.", "Susan and her brother aren't taking photos", "Susan and her brother aren't taking photos."]
+                    },
+                    {
+                        id: "q25", type: "input-full", prompt: "Dad is working in the kitchen.", hint: "Transformar a negativa",
+                        validAnswers: ["Dad is not working in the kitchen", "Dad is not working in the kitchen.", "Dad isn't working in the kitchen", "Dad isn't working in the kitchen.", "Dad's not working in the kitchen", "Dad's not working in the kitchen."]
+                    }
+                ]
+            },
+            {
+                sectionId: 6,
+                title: "6. Questions & Signal Words",
+                description: "Formula preguntas con los elementos dados e identifica expresiones de tiempo.",
+                questions: [
+                    { id: "q26", type: "input-full", prompt: "Robin / to ride / his bike", hint: "Formular pregunta", validAnswers: ["Is Robin riding his bike?", "Is Robin riding his bike"] },
+                    { id: "q27", type: "input-full", prompt: "where / she / to go", hint: "Formular pregunta", validAnswers: ["Where is she going?", "Where is she going"] },
+                    { id: "q28", type: "input-full", prompt: "what / your mother / to do / now", hint: "Formular pregunta", validAnswers: ["What is your mother doing now?", "What is your mother doing now"] },
+                    { id: "q29", type: "radio", prompt: "¿Cuál es una palabra señal (signal word) del present progressive?", options: ["often", "now", "sometimes"], answer: "now" },
+                    { id: "q30", type: "radio", prompt: "¿Cuál NO es una palabra señal del present progressive?", options: ["always", "Look!", "at the moment"], answer: "always" }
+                ]
+            }
+        ];
+
+        const TOTAL_QUESTIONS = 30;
+        let studentData = { name: '', course: '' };
+        let timerSeconds = 45 * 60; // 45 minutos
+        let timerInterval = null;
+        let isExamFinished = false;
+        let cheatViolationsCount = 0;
+        let startTimeStamp = null;
+        let lockedQuestions = {}; // Guarda IDs de preguntas bloqueadas
+
+        // --- INICIALIZACIÓN ---
+        window.onload = function() {
+            renderQuiz();
+            setupAntiCheatingSystem();
+            checkPersistentLock();
+        };
+
+        // --- COMPROBACIÓN DE BLOQUEO PERSISTENTE (LOCALSTORAGE) ---
+        function checkPersistentLock() {
+            const savedState = localStorage.getItem(STORAGE_KEY);
+            if (savedState) {
+                try {
+                    const parsed = JSON.parse(savedState);
+                    if (parsed.isFinished) {
+                        studentData = parsed.studentData || { name: 'Estudiante', course: '-' };
+                        cheatViolationsCount = parsed.cheatViolationsCount || 0;
+                        startTimeStamp = parsed.startTimeStamp ? new Date(parsed.startTimeStamp) : new Date();
+                        
+                        if (parsed.userAnswers) {
+                            Object.keys(parsed.userAnswers).forEach(qId => {
+                                const val = parsed.userAnswers[qId];
+                                const radios = document.getElementsByName(qId);
+                                if (radios && radios.length > 0) {
+                                    radios.forEach(r => {
+                                        if (r.value === val) r.checked = true;
+                                    });
+                                } else {
+                                    const inputEl = document.getElementById(qId);
+                                    if (inputEl) inputEl.value = val;
+                                }
+                            });
+                        }
+
+                        document.getElementById('startModal').classList.add('hidden');
+                        document.getElementById('pinModal').classList.remove('hidden');
+                        finishExam(true, true);
+                    }
+                } catch(e) {
+                    console.error('Error leyendo el estado guardado', e);
+                }
+            }
+        }
+
+        function promptDocentUnlock() {
+            document.getElementById('pinErrorText').classList.add('hidden');
+            document.getElementById('pinInput').value = '';
+            document.getElementById('pinModal').classList.remove('hidden');
+        }
+
+        // --- CORRECCIÓN DE DESBLOQUEO POR PIN ---
+        function verifyDocentPIN() {
+            const input = document.getElementById('pinInput').value.trim();
+            if (input === DOCENT_PIN) {
+                // a) Limpiar completamente el localStorage
+                localStorage.clear();
+                
+                // b) Reiniciar la variable de estado interna del examen
+                isExamFinished = false;
+                cheatViolationsCount = 0;
+                lockedQuestions = {};
+                studentData = { name: '', course: '' };
+                timerSeconds = 45 * 60;
+                if (timerInterval) clearInterval(timerInterval);
+
+                // Re-habilitar inputs del formulario
+                document.querySelectorAll('input, select, button').forEach(el => {
+                    el.disabled = false;
+                    el.classList.remove('opacity-70', 'cursor-not-allowed', 'opacity-50', 'bg-slate-200/50', 'dark:bg-slate-800/80');
+                });
+
+                // Resetear UI
+                document.getElementById('studentName').value = '';
+                document.getElementById('studentCourse').value = '';
+                document.getElementById('studentInfoBadge').innerText = 'Estudiante: Sin registrar';
+                document.getElementById('timerDisplay').innerText = '45:00';
+                document.getElementById('resultsDashboard').classList.add('hidden');
+                document.getElementById('web3status').classList.add('hidden');
+
+                renderQuiz();
+                updateProgress();
+
+                // c) Ocultar modal de bloqueo
+                document.getElementById('pinModal').classList.add('hidden');
+                document.getElementById('pinErrorText').classList.add('hidden');
+                document.getElementById('pinInput').value = '';
+
+                // d) Mostrar de nuevo la pantalla de registro de estudiante limpia
+                document.getElementById('startModal').classList.remove('hidden');
+            } else {
+                document.getElementById('pinErrorText').classList.remove('hidden');
+                document.getElementById('pinInput').value = '';
+            }
+        }
+
+        // --- REGISTRO DE ESTUDIANTE Y INICIO ---
+        function startExam() {
+            const nameInput = document.getElementById('studentName').value.trim();
+            const courseInput = document.getElementById('studentCourse').value.trim();
+
+            if (!nameInput || !courseInput) {
+                alert('Por favor, ingresa tu Nombre y Curso/Paralelo antes de continuar.');
+                return;
+            }
+
+            studentData.name = nameInput;
+            studentData.course = courseInput;
+
+            document.getElementById('studentInfoBadge').innerText = `${studentData.name} (${studentData.course})`;
+            document.getElementById('startModal').classList.add('hidden');
+
+            startTimeStamp = new Date();
+            startTimer();
+        }
+
+        // --- TEMPORIZADOR ---
+        function startTimer() {
+            updateTimerDisplay();
+            timerInterval = setInterval(() => {
+                if (timerSeconds <= 0) {
+                    clearInterval(timerInterval);
+                    alert('¡El tiempo límite de 45 minutos ha finalizado! Se entregará el examen automáticamente.');
+                    finishExam(true);
+                } else {
+                    timerSeconds--;
+                    updateTimerDisplay();
+                }
+            }, 1000);
+        }
+
+        function updateTimerDisplay() {
+            const mins = Math.floor(timerSeconds / 60);
+            const secs = timerSeconds % 60;
+            const formatted = `${String(mins).padStart(2, '0')}:${String(secs).padStart(2, '0')}`;
+            const display = document.getElementById('timerDisplay');
+            const container = document.getElementById('timerContainer');
+            
+            display.innerText = formatted;
+
+            if (timerSeconds < 300) {
+                container.classList.remove('bg-slate-100', 'dark:bg-slate-700', 'text-slate-800', 'dark:text-slate-100');
+                container.classList.add('bg-rose-100', 'dark:bg-rose-950/60', 'text-rose-600', 'dark:text-rose-400', 'animate-pulse');
+            }
+        }
+
+        // --- MÓDULO ANTICOPIA MULTIPLATAFORMA ---
+        function setupAntiCheatingSystem() {
+            document.addEventListener('contextmenu', e => e.preventDefault());
+            document.addEventListener('copy', e => e.preventDefault());
+            document.addEventListener('cut', e => e.preventDefault());
+            document.addEventListener('paste', e => e.preventDefault());
+
+            document.addEventListener('keydown', e => {
+                const isCmdOrCtrl = e.ctrlKey || e.metaKey;
+
+                if (
+                    e.key === 'F12' ||
+                    (isCmdOrCtrl && ['u', 'U', 'c', 'C', 'v', 'V', 'p', 'P', 'a', 'A', 's', 'S'].includes(e.key)) ||
+                    (isCmdOrCtrl && e.shiftKey && ['i', 'I', 'j', 'J', 'c', 'C'].includes(e.key)) ||
+                    (isCmdOrCtrl && e.altKey && ['i', 'I', 'j', 'J', 'u', 'U'].includes(e.key))
+                ) {
+                    e.preventDefault();
+                    registerViolation('Intento de uso de atajo de teclado bloqueado');
+                }
+            });
+
+            document.addEventListener('visibilitychange', () => {
+                if (document.hidden && !isExamFinished && document.getElementById('startModal').classList.contains('hidden')) {
+                    registerViolation('Salida de la pantalla del examen detectada');
+                }
+            });
+
+            window.addEventListener('blur', () => {
+                if (!isExamFinished && document.getElementById('startModal').classList.contains('hidden')) {
+                    registerViolation('Pérdida de foco del examen');
+                }
+            });
+        }
+
+        function registerViolation(reason) {
+            if (isExamFinished) return;
+            cheatViolationsCount++;
+
+            const banner = document.getElementById('cheatWarningBanner');
+            const text = document.getElementById('cheatWarningText');
+            
+            text.innerText = `${reason}. Infracción registrada #${cheatViolationsCount}.`;
+            banner.classList.remove('hidden');
+
+            setTimeout(() => {
+                banner.classList.add('hidden');
+            }, 5000);
+        }
+
+        function dismissWarning() {
+            document.getElementById('cheatWarningBanner').classList.add('hidden');
+        }
+
+        // --- SISTEMA DE BLOQUEO AUTOMÁTICO INMEDIATO ---
+        function autoLockQuestion(qId, triggerType, event) {
+            if (lockedQuestions[qId] || isExamFinished) return;
+
+            // Evitar que el botón de apóstrofe dispare el bloqueo por blur
+            if (triggerType === 'blur' && event && event.relatedTarget) {
+                if (event.relatedTarget.id === `apos-btn-${qId}` || event.relatedTarget.classList.contains('apos-btn')) {
+                    return;
+                }
+            }
+
+            let hasValue = false;
+            const radios = document.getElementsByName(qId);
+
+            if (radios && radios.length > 0) {
+                // Para Opciones Múltiples (Radio)
+                radios.forEach(r => {
+                    if (r.checked) hasValue = true;
+                });
+                if (hasValue) {
+                    lockedQuestions[qId] = true;
+                    radios.forEach(r => {
+                        r.disabled = true;
+                        if (r.parentElement) {
+                            r.parentElement.classList.add('opacity-70', 'cursor-not-allowed');
+                        }
+                    });
+                }
+            } else {
+                // Para Inputs de texto
+                const inputEl = document.getElementById(qId);
+                if (inputEl && inputEl.value.trim() !== '') {
+                    hasValue = true;
+                    lockedQuestions[qId] = true;
+                    inputEl.disabled = true;
+                    inputEl.classList.add('opacity-70', 'cursor-not-allowed', 'bg-slate-200/50', 'dark:bg-slate-800/80');
+
+                    const apostropheBtn = document.getElementById(`apos-btn-${qId}`);
+                    if (apostropheBtn) {
+                        apostropheBtn.disabled = true;
+                        apostropheBtn.classList.add('opacity-40', 'cursor-not-allowed');
+                    }
+                }
+            }
+
+            if (hasValue) {
+                const lockBadge = document.getElementById(`lock-indicator-${qId}`);
+                if (lockBadge) {
+                    lockBadge.classList.remove('hidden');
+                }
+                updateProgress();
+            }
+        }
+
+        // --- BOTÓN DE APÓSTROFE E INSERCIÓN DE TEXTO (SIN PERDER FOCO NI BLOQUEAR) ---
+        function insertApostrophe(inputId, event) {
+            if (event) {
+                event.preventDefault(); // Previene que el input pierda foco
+            }
+
+            const input = document.getElementById(inputId);
+            if (!input || input.disabled || lockedQuestions[inputId]) return;
+
+            const start = input.selectionStart !== null ? input.selectionStart : input.value.length;
+            const end = input.selectionEnd !== null ? input.selectionEnd : input.value.length;
+            const text = input.value;
+
+            input.value = text.substring(0, start) + "'" + text.substring(end);
+            
+            input.focus();
+            input.setSelectionRange(start + 1, start + 1);
+        }
+
+        // --- RENDERIZADO DE EXAMEN ---
+        function renderQuiz() {
+            const container = document.getElementById('sectionsContainer');
+            container.innerHTML = '';
+
+            quizData.forEach(section => {
+                const sectionEl = document.createElement('div');
+                sectionEl.className = "bg-white dark:bg-slate-800 rounded-3xl p-5 sm:p-6 shadow-sm border border-slate-200 dark:border-slate-700 transition-all";
+                
+                let questionsHtml = '';
+                section.questions.forEach((q) => {
+                    questionsHtml += renderQuestion(q);
+                });
+
+                sectionEl.innerHTML = `
+                    <div class="border-b border-slate-100 dark:border-slate-700 pb-4 mb-5">
+                        <h3 class="text-lg font-extrabold text-slate-900 dark:text-white">${section.title}</h3>
+                        <p class="text-xs sm:text-sm text-slate-500 dark:text-slate-400 mt-1">${section.description}</p>
+                    </div>
+                    <div class="space-y-4">
+                        ${questionsHtml}
+                    </div>
+                `;
+                container.appendChild(sectionEl);
+            });
+        }
+
+        function renderQuestion(q) {
+            let fieldHtml = '';
+            const iosAttributes = 'autocomplete="off" autocorrect="off" autocapitalize="none" spellcheck="false"';
+
+            if (q.type === 'radio') {
+                const radiosStr = q.options.map((opt) => `
+                    <label class="flex items-center gap-2 px-3 py-2.5 rounded-xl border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 hover:bg-blue-50/50 dark:hover:bg-slate-700/50 cursor-pointer transition text-sm">
+                        <input type="radio" name="${q.id}" value="${opt}" onchange="autoLockQuestion('${q.id}', 'radio', event)" class="w-4 h-4 text-blue-600 focus:ring-blue-500 border-slate-300">
+                        <span class="text-slate-800 dark:text-slate-200 font-medium">${opt}</span>
+                    </label>
+                `).join('');
+
+                fieldHtml = `
+                    <div class="space-y-3">
+                        <p class="text-sm sm:text-base font-semibold text-slate-900 dark:text-slate-100">${q.prompt}</p>
+                        <div class="grid grid-cols-1 sm:grid-cols-3 gap-2.5">
+                            ${radiosStr}
+                        </div>
+                    </div>
+                `;
+            } else if (q.type === 'input') {
+                fieldHtml = `
+                    <div class="flex flex-wrap items-center gap-2 text-sm sm:text-base text-slate-800 dark:text-slate-200">
+                        <span class="font-medium">${q.prompt}</span>
+                        <div class="relative inline-flex items-center gap-1.5">
+                            <input type="text" id="${q.id}" placeholder="${q.verb}" ${iosAttributes} 
+                                onblur="autoLockQuestion('${q.id}', 'blur', event)" 
+                                onkeydown="if(event.key==='Enter'){ event.preventDefault(); autoLockQuestion('${q.id}', 'enter', event); }"
+                                class="bg-slate-50 dark:bg-slate-700 border border-slate-300 dark:border-slate-600 text-slate-900 dark:text-white rounded-xl px-3 py-2 w-40 sm:w-48 focus:ring-2 focus:ring-blue-500 focus:outline-none transition" />
+                            <button type="button" id="apos-btn-${q.id}" 
+                                onmousedown="insertApostrophe('${q.id}', event)" 
+                                ontouchstart="insertApostrophe('${q.id}', event)" 
+                                onclick="event.preventDefault()" 
+                                title="Insertar apóstrofe" 
+                                class="apos-btn px-2.5 py-2 rounded-xl bg-slate-200 hover:bg-slate-300 dark:bg-slate-600 dark:hover:bg-slate-500 text-slate-800 dark:text-slate-100 font-mono font-bold text-base transition shadow-sm select-none">
+                                '
+                            </button>
+                        </div>
+                        <span class="font-medium">${q.rest}</span>
+                    </div>
+                `;
+            } else if (q.type === 'input-full') {
+                fieldHtml = `
+                    <div class="space-y-2">
+                        <div class="flex flex-col sm:flex-row sm:items-center justify-between text-sm sm:text-base text-slate-800 dark:text-slate-200 gap-1">
+                            <span class="font-semibold text-slate-900 dark:text-slate-100">"${q.prompt}"</span>
+                            ${q.hint ? `<span class="text-xs font-medium text-slate-500 bg-slate-100 dark:bg-slate-700 px-2.5 py-1 rounded-lg">${q.hint}</span>` : ''}
+                        </div>
+                        <div class="flex items-center gap-2">
+                            <input type="text" id="${q.id}" placeholder="Escribe tu respuesta completa aquí..." ${iosAttributes} 
+                                onblur="autoLockQuestion('${q.id}', 'blur', event)" 
+                                onkeydown="if(event.key==='Enter'){ event.preventDefault(); autoLockQuestion('${q.id}', 'enter', event); }"
+                                class="w-full bg-slate-50 dark:bg-slate-700 border border-slate-300 dark:border-slate-600 text-slate-900 dark:text-white rounded-xl px-3.5 py-2.5 text-sm sm:text-base focus:ring-2 focus:ring-blue-500 focus:outline-none transition" />
+                            <button type="button" id="apos-btn-${q.id}" 
+                                onmousedown="insertApostrophe('${q.id}', event)" 
+                                ontouchstart="insertApostrophe('${q.id}', event)" 
+                                onclick="event.preventDefault()" 
+                                title="Insertar apóstrofe" 
+                                class="apos-btn px-3.5 py-2.5 rounded-xl bg-slate-200 hover:bg-slate-300 dark:bg-slate-600 dark:hover:bg-slate-500 text-slate-800 dark:text-slate-100 font-mono font-bold text-lg transition shadow-sm select-none">
+                                '
+                            </button>
+                        </div>
+                    </div>
+                `;
+            }
+
+            return `
+                <div class="p-4 rounded-2xl bg-slate-50/70 dark:bg-slate-800/50 border border-slate-200/80 dark:border-slate-700/80 transition relative" id="card-${q.id}">
+                    <div id="lock-indicator-${q.id}" class="hidden absolute top-3 right-3 text-emerald-600 dark:text-emerald-400 text-xs font-bold bg-emerald-100 dark:bg-emerald-950/60 px-2.5 py-1 rounded-full flex items-center gap-1">
+                        <i class="fa-solid fa-lock"></i> Bloqueada
+                    </div>
+                    ${fieldHtml}
+                    <div id="feedback-${q.id}" class="hidden mt-2.5 text-xs sm:text-sm font-semibold flex items-center space-x-1.5"></div>
+                </div>
+            `;
+        }
+
+        function normalizeString(str) {
+            if (!str) return '';
+            return str
+                .trim()
+                .toLowerCase()
+                .replace(/[’`']/g, "'")
+                .replace(/\s+/g, ' ');
+        }
+
+        function updateProgress() {
+            let lockedCount = Object.keys(lockedQuestions).length;
+
+            document.getElementById('answeredCount').innerText = lockedCount;
+            const percentage = Math.round((lockedCount / TOTAL_QUESTIONS) * 100);
+            document.getElementById('progressBar').style.width = `${percentage}%`;
+        }
+
+        // --- ENVÍO A WEB3FORMS ---
+        async function sendToWeb3Forms(payload) {
+            const activeKey = (typeof WEB3FORMS_ACCESS_KEY !== 'undefined' && WEB3FORMS_ACCESS_KEY && WEB3FORMS_ACCESS_KEY !== "TU_KEY_AQUI")
+                ? WEB3FORMS_ACCESS_KEY
+                : localStorage.getItem("web3forms_key");
+
+            const statusEl = document.getElementById('web3status');
+            if (!activeKey) {
+                statusEl.classList.remove('hidden');
+                statusEl.className = "mt-3 text-xs font-semibold px-3 py-1.5 rounded-lg inline-flex items-center gap-2 bg-slate-100 dark:bg-slate-700 text-slate-600 dark:text-slate-300";
+                statusEl.innerHTML = `<i class="fa-solid fa-circle-info text-blue-500"></i> Sin clave Web3Forms (no enviado a servidor).`;
+                return;
+            }
+
+            statusEl.classList.remove('hidden');
+            statusEl.className = "mt-3 text-xs font-semibold px-3 py-1.5 rounded-lg inline-flex items-center gap-2 bg-amber-100 text-amber-800 dark:bg-amber-950/60 dark:text-amber-300 animate-pulse";
+            statusEl.innerHTML = `<i class="fa-solid fa-spinner fa-spin"></i> Enviando resultado a Web3Forms...`;
+
+            try {
+                const response = await fetch('https://api.web3forms.com/submit', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        access_key: activeKey,
+                        subject: `Evaluación Inglés: ${payload.studentName} (${payload.studentCourse}) - Nota: ${payload.scoreOver10}/10`,
+                        from_name: "Sistema de Evaluaciones de Inglés",
+                        "Estudiante": payload.studentName,
+                        "Curso": payload.studentCourse,
+                        "Nota Sobre 10": `${payload.scoreOver10} / 10.00`,
+                        "Aciertos": `${payload.correctCount} / ${payload.totalQuestions}`,
+                        "Desempeño": payload.qualitative,
+                        "Tiempo Empleado": payload.timeSpent,
+                        "Infracciones Anticopia": payload.cheatViolations,
+                        "Fecha": payload.timestamp
+                    })
+                });
+
+                const resData = await response.json();
+                if (resData.success) {
+                    statusEl.className = "mt-3 text-xs font-semibold px-3 py-1.5 rounded-lg inline-flex items-center gap-2 bg-emerald-100 text-emerald-800 dark:bg-emerald-950/60 dark:text-emerald-300";
+                    statusEl.innerHTML = `<i class="fa-solid fa-circle-check text-emerald-600"></i> Resultado enviado con éxito a Web3Forms.`;
+                } else {
+                    throw new Error(resData.message || 'Error en respuesta de Web3Forms');
+                }
+            } catch (err) {
+                statusEl.className = "mt-3 text-xs font-semibold px-3 py-1.5 rounded-lg inline-flex items-center gap-2 bg-rose-100 text-rose-800 dark:bg-rose-950/60 dark:text-rose-300";
+                statusEl.innerHTML = `<i class="fa-solid fa-circle-exclamation text-rose-600"></i> Error al enviar a Web3Forms (${err.message || 'Error de conexión'}).`;
+            }
+        }
+
+        // --- FINALIZAR Y CALIFICAR ---
+        function finishExam(isAutoSubmit = false, isRestoring = false) {
+            if (isExamFinished && !isRestoring) return;
+
+            // Asegurar bloqueo de respuestas en campos con texto pero sin blur
+            quizData.forEach(s => s.questions.forEach(q => autoLockQuestion(q.id, 'submit')));
+
+            if (!isAutoSubmit && !isRestoring) {
+                const unlockedCount = TOTAL_QUESTIONS - Object.keys(lockedQuestions).length;
+                if (unlockedCount > 0) {
+                    const confirmSubmit = confirm(`Tienes ${unlockedCount} preguntas sin responder. ¿Deseas entregar el examen de todas formas?`);
+                    if (!confirmSubmit) return;
+                } else {
+                    const confirmSubmit = confirm('¿Confirmas que deseas entregar tu examen para ser calificado?');
+                    if (!confirmSubmit) return;
+                }
+            }
+
+            isExamFinished = true;
+            clearInterval(timerInterval);
+
+            // Deshabilitar todos los controles
+            document.querySelectorAll('input, select, button[id^="apos-btn-"]').forEach(el => el.disabled = true);
+            document.getElementById('submitBtn').disabled = true;
+            document.getElementById('submitBtn').classList.add('opacity-50', 'cursor-not-allowed');
+
+            let correctCount = 0;
+            const userAnswersState = {};
+
+            quizData.forEach(section => {
+                section.questions.forEach(q => {
+                    const cardEl = document.getElementById(`card-${q.id}`);
+                    const feedbackEl = document.getElementById(`feedback-${q.id}`);
+                    if (!cardEl || !feedbackEl) return;
+
+                    let userVal = '';
+                    if (q.type === 'radio') {
+                        const checked = document.querySelector(`input[name="${q.id}"]:checked`);
+                        if (checked) userVal = checked.value;
+                    } else {
+                        const inputEl = document.getElementById(q.id);
+                        if (inputEl) userVal = inputEl.value;
+                    }
+
+                    userAnswersState[q.id] = userVal;
+
+                    const normUser = normalizeString(userVal);
+                    let isCorrect = false;
+                    let expectedText = '';
+
+                    if (q.type === 'radio') {
+                        isCorrect = (normUser === normalizeString(q.answer));
+                        expectedText = q.answer;
+                    } else if (q.type === 'input' || q.type === 'input-full') {
+                        isCorrect = q.validAnswers.some(ans => normalizeString(ans) === normUser);
+                        expectedText = q.validAnswers[0];
+                    }
+
+                    feedbackEl.classList.remove('hidden', 'text-emerald-600', 'dark:text-emerald-400', 'text-rose-600', 'dark:text-rose-400');
+                    cardEl.classList.remove('border-emerald-500', 'border-rose-500', 'bg-emerald-50/20', 'bg-rose-50/20');
+
+                    if (isCorrect) {
+                        correctCount++;
+                        cardEl.classList.add('border-emerald-500', 'bg-emerald-50/20');
+                        feedbackEl.classList.add('text-emerald-600', 'dark:text-emerald-400');
+                        feedbackEl.innerHTML = `<i class="fa-solid fa-circle-check"></i> <span>¡Correcto!</span>`;
+                    } else {
+                        cardEl.classList.add('border-rose-500', 'bg-rose-50/20');
+                        feedbackEl.classList.add('text-rose-600', 'dark:text-rose-400');
+                        feedbackEl.innerHTML = `<i class="fa-solid fa-circle-xmark"></i> <span>Incorrecto. Respuesta esperada: <strong class="underline">${expectedText}</strong></span>`;
+                    }
+                });
+            });
+
+            // Guardar en localStorage
+            if (!isRestoring) {
+                const stateToSave = {
+                    isFinished: true,
+                    studentData: studentData,
+                    cheatViolationsCount: cheatViolationsCount,
+                    startTimeStamp: startTimeStamp,
+                    userAnswers: userAnswersState
+                };
+                localStorage.setItem(STORAGE_KEY, JSON.stringify(stateToSave));
+            }
+
+            // CALIFICACIÓN SOBRE 10
+            const scoreOver10 = (correctCount / TOTAL_QUESTIONS) * 10;
+            const formattedGrade10 = scoreOver10.toFixed(2);
+            const percentage = Math.round((correctCount / TOTAL_QUESTIONS) * 100);
+
+            let qualitative = '';
+            let qualitativeColorClass = '';
+            if (scoreOver10 >= 9.0) {
+                qualitative = 'Excelente';
+                qualitativeColorClass = 'bg-emerald-100 text-emerald-800 dark:bg-emerald-900/60 dark:text-emerald-200';
+            } else if (scoreOver10 >= 7.0) {
+                qualitative = 'Muy Bueno';
+                qualitativeColorClass = 'bg-blue-100 text-blue-800 dark:bg-blue-900/60 dark:text-blue-200';
+            } else if (scoreOver10 >= 5.0) {
+                qualitative = 'Aceptable';
+                qualitativeColorClass = 'bg-amber-100 text-amber-800 dark:bg-amber-900/60 dark:text-amber-200';
+            } else {
+                qualitative = 'Insuficiente';
+                qualitativeColorClass = 'bg-rose-100 text-rose-800 dark:bg-rose-900/60 dark:text-rose-200';
+            }
+
+            const now = new Date();
+            const elapsedSeconds = Math.floor((now - (startTimeStamp || now)) / 1000);
+            const elapsedMins = Math.floor(elapsedSeconds / 60);
+            const elapsedSecsLeft = elapsedSeconds % 60;
+            const timeSpentStr = `${elapsedMins}m ${elapsedSecsLeft}s`;
+
+            document.getElementById('finalGrade10').innerText = `${formattedGrade10} / 10`;
+            
+            const qBadge = document.getElementById('qualitativeBadge');
+            qBadge.innerText = qualitative;
+            qBadge.className = `text-xs font-bold mt-1 px-2.5 py-1 rounded-md inline-block ${qualitativeColorClass}`;
+
+            document.getElementById('finalScoreText').innerText = `${correctCount} / ${TOTAL_QUESTIONS}`;
+            document.getElementById('finalPercentageText').innerText = `${percentage}%`;
+
+            const cheatBadge = document.getElementById('cheatReportBadge');
+            cheatBadge.innerText = cheatViolationsCount;
+            cheatBadge.className = cheatViolationsCount > 0 
+                ? "text-xl sm:text-2xl font-bold text-rose-600 dark:text-rose-400 mt-2" 
+                : "text-xl sm:text-2xl font-bold text-emerald-600 dark:text-emerald-400 mt-2";
+
+            // Datos Imprimibles A4
+            document.getElementById('printStudentName').innerText = studentData.name || '-';
+            document.getElementById('printStudentCourse').innerText = studentData.course || '-';
+            document.getElementById('printFinalGrade').innerText = formattedGrade10;
+            document.getElementById('printQualitativeGrade').innerText = qualitative;
+            document.getElementById('printTimeSpent').innerText = timeSpentStr;
+            document.getElementById('printCheatingCount').innerText = `${cheatViolationsCount} registradas`;
+            document.getElementById('printDate').innerText = now.toLocaleDateString('es-ES', { 
+                year: 'numeric', month: 'long', day: 'numeric', hour: '2-digit', minute: '2-digit' 
+            });
+
+            const dashboard = document.getElementById('resultsDashboard');
+            dashboard.classList.remove('hidden');
+
+            if (!isRestoring) {
+                dashboard.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                // Enviar resultados vía Web3Forms
+                sendToWeb3Forms({
+                    studentName: studentData.name,
+                    studentCourse: studentData.course,
+                    scoreOver10: formattedGrade10,
+                    correctCount: correctCount,
+                    totalQuestions: TOTAL_QUESTIONS,
+                    qualitative: qualitative,
+                    timeSpent: timeSpentStr,
+                    cheatViolations: cheatViolationsCount,
+                    timestamp: now.toLocaleString('es-ES')
+                });
+            }
+        }
+
+        // --- DARK MODE TOGGLE ---
+        function toggleTheme() {
+            const html = document.documentElement;
+            const icon = document.getElementById('themeIcon');
+            if (html.classList.contains('dark')) {
+                html.classList.remove('dark');
+                icon.className = 'fa-solid fa-moon text-lg';
+            } else {
+                html.classList.add('dark');
+                icon.className = 'fa-solid fa-sun text-lg text-amber-400';
+            }
+        }
+    </script>
+</body>
+</html>
